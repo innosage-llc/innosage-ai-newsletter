@@ -6,8 +6,8 @@ set -e
 
 echo "🛡️ Starting Gatekeeper checks..."
 
-# Change to the web directory where the Next.js app lives
-cd web
+# Change to the web directory relative to the script's location
+cd "$(dirname "$0")/../web"
 
 # 1. Linting
 echo "🔍 Running Lint..."

@@ -1,0 +1,7 @@
+{
+  "name": "innosage-ai-newsletter",
+  "version": "1.0.0",
+  "scripts": {
+    "gate": "./scripts/gatekeeper.sh"
+  }
+}

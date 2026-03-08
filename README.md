@@ -4,7 +4,7 @@ This repository hosts all resources, implementations, configurations, and AI new
 
 ## Strategic Focus (Q1 2026)
 
-- **Target Persona:** Engineering Teams and Technical Freelancers.
+- **Target Persona:** Everyday professionals and entrepreneurs in non-tech domains transforming into entry-level AI builders.
 - **Core Wedge:** Sub-100ms latency via local-first architecture (leveraging our Notion-style Markdown editor).
 - **Key Differentiator:** "Ephemeral Security" (Burn After Reading) for secure sharing and "Custom Domain Publishing."
 

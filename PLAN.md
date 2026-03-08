@@ -1,7 +1,7 @@
 # InnoSage AI Newsletter: Project Master Plan (Q1 2026)
 
 ## 1. Executive Summary
-This project transforms our internal AI curation into a strategic corporate asset and a marketing engine for the **InnoSage Notion-Style Markdown Editor**. By automating the "News-to-Markdown-to-Web" pipeline, we demonstrate our "Performance-First" architecture while building a high-trust, "Stable Output" (情绪稳定输出端) brand for engineering teams.
+This project transforms our internal AI curation into a strategic corporate asset and a marketing engine for the **InnoSage Notion-Style Markdown Editor**. By automating the "News-to-Markdown-to-Web" pipeline, we demonstrate our "Performance-First" architecture while building a high-trust, "Stable Output" (情绪稳定输出端) brand for everyday professionals and entrepreneurs transforming into entry-level AI builders.
 
 ---
 
@@ -23,7 +23,9 @@ This project transforms our internal AI curation into a strategic corporate asse
 
 ### Phase 2: AI Summarization & "Stable" Tone
 - **Objective:** Integrate LLM (Claude/Gemini) to process raw news into high-signal summaries.
-- **Constraint:** Must adhere to the "Stable Output" persona (rational, non-hyped, engineering-focused).
+- **Constraint:** Must adhere to the "Stable Output" persona (rational, non-hyped, accessible).
+  - The AI summarizer should be specifically instructed to extract practical, no-code/low-code use cases.
+  - It should translate technical AI news into everyday business impact.
 - **Artifact:** `engine/summarizer.py` + `.agent/prompts/stable_tone_brief.md`
 
 ### Phase 3: "Markdown-to-Web" Publishing Pipeline
@@ -38,9 +40,9 @@ This project transforms our internal AI curation into a strategic corporate asse
 ---
 
 ## 4. Editorial Strategy: "Stable Output" (情绪稳定输出端)
-- **Target Audience:** Engineering Leads & Technical Founders.
+- **Target Audience:** Non-tech professionals and entrepreneurs seeking to become entry-level AI builders. They are time-poor but eager to leverage AI to future-proof their careers and businesses.
 - **Frequency:** Weekly (Friday morning launch).
-- **Differentiator:** No "Breaking News" hype. We focus on **"What this means for your stack"** and **"Rational Reflection."**
+- **Differentiator:** No "Breaking News" hype. We focus on **"What this means for your business/workflow,"** **"How you can use this today,"** and **"Rational Reflection."**
 
 ---
 

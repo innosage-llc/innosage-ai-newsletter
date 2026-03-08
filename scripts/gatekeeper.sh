@@ -6,6 +6,10 @@ set -e
 
 echo "🛡️ Starting Gatekeeper checks..."
 
+# 0. Validate Bash Scripts
+echo "⚙️ Validating Bash Scripts..."
+bash -n "$(dirname "$0")/init-session.sh"
+
 # Change to the web directory relative to the script's location
 cd "$(dirname "$0")/../web"
 

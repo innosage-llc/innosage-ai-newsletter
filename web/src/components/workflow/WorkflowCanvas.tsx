@@ -54,7 +54,7 @@ export default function WorkflowCanvas() {
   );
 
   return (
-    <div className="h-[calc(100vh-4rem)] w-full border border-gray-200 rounded-lg overflow-hidden bg-slate-50">
+    <div className="flex-grow w-full border border-border rounded-lg overflow-hidden bg-muted/20">
       <ReactFlow
         nodes={nodes}
         edges={edges}

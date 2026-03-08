@@ -1,14 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import WorkflowCanvas from '@/components/workflow/WorkflowCanvas';
 
-// Mock ResizeObserver for React Flow
-class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
-window.ResizeObserver = ResizeObserver;
-
 describe('WorkflowCanvas Component', () => {
   it('renders without crashing and displays the nodes', () => {
     // Need to wrap in a container with height for React Flow to render properly

@@ -11,6 +11,7 @@ The Gate command for this repository is:
 - Use descriptive commit messages following Conventional Commits.
 
 ## Closing the Loop
+0. **Initialize Workspace**: Before modifying any code, create a session folder in `docs/` named `{YYYY-MM-DD-slug}`. Always run `./scripts/init-session.sh <task-slug>` as your very first action. All session-specific scratchpads, rules, and artifacts (like the filled-out `feature-spec.md`) must live strictly within this new folder.
 1. **Identify**: Read the task/issue.
 2. **Execute**: Modify the code.
 3. **Verify (The Gate)**: Run the Gate. If it fails, fix and repeat until it passes.

@@ -23,7 +23,9 @@ This project transforms our internal AI curation into a strategic corporate asse
 
 ### Phase 2: AI Summarization & "Stable" Tone
 - **Objective:** Integrate LLM (Claude/Gemini) to process raw news into high-signal summaries.
-- **Constraint:** Must adhere to the "Stable Output" persona (rational, non-hyped, accessible). The AI summarizer should be specifically instructed to extract practical, no-code/low-code use cases and translate technical AI news into everyday business impact.
+- **Constraint:** Must adhere to the "Stable Output" persona (rational, non-hyped, accessible).
+  - The AI summarizer should be specifically instructed to extract practical, no-code/low-code use cases.
+  - It should translate technical AI news into everyday business impact.
 - **Artifact:** `engine/summarizer.py` + `.agent/prompts/stable_tone_brief.md`
 
 ### Phase 3: "Markdown-to-Web" Publishing Pipeline
@@ -38,7 +40,7 @@ This project transforms our internal AI curation into a strategic corporate asse
 ---
 
 ## 4. Editorial Strategy: "Stable Output" (情绪稳定输出端)
-- **Target Audience:** Everyday professionals and entrepreneurs in non-tech domains who want to become entry-level AI builders, don't have time to digest the latest AI news, and are willing to grow to better prepare for AI hitting their life and economy.
+- **Target Audience:** Non-tech professionals and entrepreneurs seeking to become entry-level AI builders. They are time-poor but eager to leverage AI to future-proof their careers and businesses.
 - **Frequency:** Weekly (Friday morning launch).
 - **Differentiator:** No "Breaking News" hype. We focus on **"What this means for your business/workflow,"** **"How you can use this today,"** and **"Rational Reflection."**
 

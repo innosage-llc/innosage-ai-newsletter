@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   ReactFlow,
   Background,
@@ -25,28 +25,51 @@ const nodeTypes = {
   aiSummarize: AiSummarizeNode,
 };
 
-const initialNodes: Node[] = [
-  {
-    id: '1',
-    type: 'fetchRss',
-    position: { x: 100, y: 100 },
-    data: { label: 'Fetch from Sources' },
-  },
-  {
-    id: '2',
-    type: 'aiSummarize',
-    position: { x: 400, y: 100 },
-    data: { label: 'Summarize with Stable Tone' },
-  },
-];
-
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2', animated: true },
-];
+const initialNodes: Node[] = [];
+const initialEdges: Edge[] = [];
 
 export default function WorkflowCanvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const fetchState = async () => {
+      try {
+        const response = await fetch('/api/workflow');
+        if (response.ok) {
+          const data = await response.json();
+
+          const mergeItems = <T extends { id: string }>(
+            prevItems: T[],
+            serverItems: T[],
+          ): T[] => {
+            const existingIds = new Set(prevItems.map((item) => item.id));
+            const itemsToAdd = serverItems.filter((item) => !existingIds.has(item.id));
+
+            if (itemsToAdd.length > 0) {
+              return [...prevItems, ...itemsToAdd];
+            }
+
+            return prevItems;
+          };
+
+          setNodes((prevNodes) => mergeItems(prevNodes, data.nodes));
+          setEdges((prevEdges) => mergeItems(prevEdges, data.edges));
+        }
+      } catch (error) {
+        console.error('Failed to fetch workflow state:', error);
+      } finally {
+        timeoutId = setTimeout(fetchState, 1000);
+      }
+    };
+
+    // Initial fetch
+    fetchState();
+
+    return () => clearTimeout(timeoutId);
+  }, [setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),

@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+
+/**
+ * innosage-opal-cli
+ * AI-Native CLI Bridge for the InnoSage AI Newsletter System.
+ * Allows local AI agents (e.g., Gemini Code, Claude Code) to interact
+ * directly with the visual workflow manager running locally.
+ */
+
+const http = require('http');
+
+const API_HOST = 'localhost';
+const API_PORT = 3000;
+const API_PATH = '/api/workflow';
+
+function printUsage() {
+  console.log(`
+Usage: innosage-opal-cli <command> [options]
+
+Commands:
+  list-nodes                  List all current nodes in the workflow.
+  add-node <type> <label>     Add a new node to the workflow.
+                              Types: fetchRss, aiSummarize
+
+Examples:
+  innosage-opal-cli list-nodes
+  innosage-opal-cli add-node fetchRss "TechCrunch"
+  `);
+}
+
+function sendRequest(method, data = null) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: API_HOST,
+      port: API_PORT,
+      path: API_PATH,
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    if (data) {
+      options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(data));
+    }
+
+    const req = http.request(options, (res) => {
+      let body = '';
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          try {
+            resolve(JSON.parse(body));
+          } catch (e) {
+            resolve(body);
+          }
+        } else {
+          reject(new Error(`API Error (${res.statusCode}): ${body}`));
+        }
+      });
+    });
+
+    req.on('error', (e) => {
+      reject(new Error(`Failed to connect to ${API_HOST}:${API_PORT}. Is the Next.js dev server running?\n${e.message}`));
+    });
+
+    if (data) {
+      req.write(JSON.stringify(data));
+    }
+    req.end();
+  });
+}
+
+async function listNodes() {
+  try {
+    const state = await sendRequest('GET');
+    console.log(JSON.stringify(state.nodes, null, 2));
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+}
+
+async function addNode(type, label) {
+  if (!type || !label) {
+    console.error('Error: <type> and <label> are required for add-node.');
+    printUsage();
+    process.exit(1);
+  }
+
+  const validTypes = ['fetchRss', 'aiSummarize'];
+  if (!validTypes.includes(type)) {
+    console.error(`Error: Invalid node type. Valid types are: ${validTypes.join(', ')}`);
+    process.exit(1);
+  }
+
+  try {
+    const result = await sendRequest('POST', {
+      action: 'addNode',
+      type: type,
+      label: label,
+    });
+    console.log('✅ Node added successfully.');
+    console.log(JSON.stringify(result, null, 2));
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+}
+
+const [, , command, ...args] = process.argv;
+
+switch (command) {
+  case 'list-nodes':
+    listNodes();
+    break;
+  case 'add-node':
+    addNode(args[0], args.slice(1).join(' '));
+    break;
+  case 'help':
+  case '--help':
+  case '-h':
+  case undefined:
+    printUsage();
+    break;
+  default:
+    console.error(`Unknown command: ${command}`);
+    printUsage();
+    process.exit(1);
+}

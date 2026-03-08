@@ -1,0 +1,56 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "type": "fetchRss",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "data": {
+        "label": "Fetch from Sources"
+      }
+    },
+    {
+      "id": "2",
+      "type": "aiSummarize",
+      "position": {
+        "x": 400,
+        "y": 100
+      },
+      "data": {
+        "label": "Summarize with Stable Tone"
+      }
+    },
+    {
+      "id": "1772953865481",
+      "type": "fetchRss",
+      "position": {
+        "x": 100,
+        "y": 300
+      },
+      "data": {
+        "label": "Hacker News"
+      }
+    },
+    {
+      "id": "1772954090341",
+      "type": "aiSummarize",
+      "position": {
+        "x": 400,
+        "y": 300
+      },
+      "data": {
+        "label": "CLI Added Summarizer"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-2",
+      "source": "1",
+      "target": "2",
+      "animated": true
+    }
+  ]
+}

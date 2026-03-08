@@ -9,6 +9,7 @@ echo "🛡️ Starting Gatekeeper checks..."
 # 0. Validate Bash Scripts
 echo "⚙️ Validating Bash Scripts..."
 bash -n "$(dirname "$0")/init-session.sh"
+node -c "$(dirname "$0")/innosage-opal-cli"
 
 # Change to the web directory relative to the script's location
 cd "$(dirname "$0")/../web"

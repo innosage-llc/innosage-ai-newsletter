@@ -1,9 +1,7 @@
 import '@testing-library/jest-dom';
 
-// ResizeObserver mock
-class ResizeObserver {
+global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
-}
-window.ResizeObserver = ResizeObserver;
+};

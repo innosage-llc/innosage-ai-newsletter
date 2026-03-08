@@ -1,17 +1,22 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 const dataDir = path.join(process.cwd(), 'data');
 const stateFilePath = path.join(dataDir, 'workflow.json');
 
 // Ensure the data directory and file exist
-function ensureDataFile() {
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+async function ensureDataFile() {
+  try {
+    await fs.access(dataDir);
+  } catch {
+    await fs.mkdir(dataDir, { recursive: true });
   }
 
-  if (!fs.existsSync(stateFilePath)) {
+  try {
+    await fs.access(stateFilePath);
+  } catch {
     const initialState = {
       nodes: [
         {
@@ -31,14 +36,14 @@ function ensureDataFile() {
         { id: 'e1-2', source: '1', target: '2', animated: true },
       ],
     };
-    fs.writeFileSync(stateFilePath, JSON.stringify(initialState, null, 2), 'utf8');
+    await fs.writeFile(stateFilePath, JSON.stringify(initialState, null, 2), 'utf8');
   }
 }
 
 export async function GET() {
   try {
-    ensureDataFile();
-    const data = fs.readFileSync(stateFilePath, 'utf8');
+    await ensureDataFile();
+    const data = await fs.readFile(stateFilePath, 'utf8');
     return NextResponse.json(JSON.parse(data));
   } catch (error) {
     console.error('Error reading workflow state:', error);
@@ -56,12 +61,12 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Type and label are required for addNode' }, { status: 400 });
       }
 
-      ensureDataFile();
-      const stateData = fs.readFileSync(stateFilePath, 'utf8');
+      await ensureDataFile();
+      const stateData = await fs.readFile(stateFilePath, 'utf8');
       const state = JSON.parse(stateData);
 
       // Create new node
-      const newNodeId = Date.now().toString();
+      const newNodeId = crypto.randomUUID();
 
       // Calculate a rough position based on the number of existing nodes
       const existingNodesOfType = state.nodes.filter((n: { type: string }) => n.type === type);
@@ -77,7 +82,7 @@ export async function POST(request: Request) {
 
       state.nodes.push(newNode);
 
-      fs.writeFileSync(stateFilePath, JSON.stringify(state, null, 2), 'utf8');
+      await fs.writeFile(stateFilePath, JSON.stringify(state, null, 2), 'utf8');
 
       return NextResponse.json({ success: true, node: newNode });
     }

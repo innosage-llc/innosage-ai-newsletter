@@ -110,14 +110,14 @@ async function addNode(type, label) {
   }
 }
 
-const [, , command, arg1, arg2] = process.argv;
+const [, , command, ...args] = process.argv;
 
 switch (command) {
   case 'list-nodes':
     listNodes();
     break;
   case 'add-node':
-    addNode(arg1, arg2);
+    addNode(args[0], args.slice(1).join(' '));
     break;
   case 'help':
   case '--help':

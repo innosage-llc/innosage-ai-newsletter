@@ -33,58 +33,42 @@ export default function WorkflowCanvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const fetchState = async () => {
       try {
         const response = await fetch('/api/workflow');
         if (response.ok) {
           const data = await response.json();
-          // To prevent constant re-rendering if nodes haven't changed,
-          // we could deep compare, but for now we just update state
-          // A simple shallow length check or stringify check helps a bit
-          // We only want to add new nodes from the server that don't exist locally
-          // to avoid overwriting node positions changed by the user in the UI.
-          setNodes((prevNodes) => {
-             let changed = false;
-             const newNodes = [...prevNodes];
 
-             data.nodes.forEach((serverNode: Node) => {
-               const existingNodeIndex = newNodes.findIndex(n => n.id === serverNode.id);
-               if (existingNodeIndex === -1) {
-                 newNodes.push(serverNode);
-                 changed = true;
-               }
-             });
+          const mergeItems = <T extends { id: string }>(
+            prevItems: T[],
+            serverItems: T[],
+          ): T[] => {
+            const existingIds = new Set(prevItems.map((item) => item.id));
+            const itemsToAdd = serverItems.filter((item) => !existingIds.has(item.id));
 
-             return changed ? newNodes : prevNodes;
-          });
+            if (itemsToAdd.length > 0) {
+              return [...prevItems, ...itemsToAdd];
+            }
 
-          setEdges((prevEdges) => {
-             let changed = false;
-             const newEdges = [...prevEdges];
+            return prevItems;
+          };
 
-             data.edges.forEach((serverEdge: Edge) => {
-               const existingEdgeIndex = newEdges.findIndex(e => e.id === serverEdge.id);
-               if (existingEdgeIndex === -1) {
-                 newEdges.push(serverEdge);
-                 changed = true;
-               }
-             });
-
-             return changed ? newEdges : prevEdges;
-          });
+          setNodes((prevNodes) => mergeItems(prevNodes, data.nodes));
+          setEdges((prevEdges) => mergeItems(prevEdges, data.edges));
         }
       } catch (error) {
         console.error('Failed to fetch workflow state:', error);
+      } finally {
+        timeoutId = setTimeout(fetchState, 1000);
       }
     };
 
     // Initial fetch
     fetchState();
 
-    // Poll every 1000ms
-    const intervalId = setInterval(fetchState, 1000);
-
-    return () => clearInterval(intervalId);
+    return () => clearTimeout(timeoutId);
   }, [setNodes, setEdges]);
 
   const onConnect = useCallback(
